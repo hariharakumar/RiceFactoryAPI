@@ -30,17 +30,21 @@ import java.util.List;
 )
 public class UserServiceDaoImpl implements UserServiceDao {
 
-    private final String SQL_USER_GET_BY_ID = "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2,a.address_1, a.address_2,a.city,a.state,a.zip_code,u.password,u.address_id from user u, address a where u.address_id = a.id and u.id = ? ";
+    private final String SQL_USER_GET_BY_ID = "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2,a.address_1, a.address_2,a.city,a.state,a.zip_code,u.password,ua.address_id from user u, address a, users_to_address ua where ua.user_id=? and ua.address_id = a.id and ua.user_id=u.id";
 
-    private final String SQL_USER_GET_BY_EMAIL = "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2,a.address_1, a.address_2,a.city,a.state,a.zip_code,u.password,u.address_id from user u, address a where u.address_id = a.id and u.email = ? ";
+    private final String SQL_USER_GET_BY_EMAIL = "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2,a.address_1, a.address_2,a.city,a.state,a.zip_code,u.password,ua.address_id from user u, address a,users_to_address ua where u.email=? and ua.address_id = a.id and ua.user_id=u.id ";
 
     private final String SQL_ADDRESS_CREATE = "insert into address(address_1,address_2,city,state,zip_code) values(?,?,?,?,?)";
     private final String SQL_ADDRESS_UPDATE = "update address set address_1=?,address_2=?,city=?,state=?,zip_code=? where id=?";
 
-    private final String SQL_USER_CREATE = "insert into user(first_name,last_name,email,phone_number_1, phone_number_2, password, enabled, address_id) values(?,?,?,?,?,?,?,?)";
+    private final String SQL_USER_CREATE = "insert into user(first_name,last_name,email,phone_number_1, phone_number_2, password, enabled) values(?,?,?,?,?,?,?)";
     private final String SQL_USER_UPDATE = "update user set first_name=?,last_name=?,email=?,phone_number_1=?,phone_number_2=?,password=?,enabled=? where id=?";
 
-    private final String SQL_GET_ALL_USERS = "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2,a.address_1, a.address_2,a.city,a.state,a.zip_code,u.password,u.address_id from user u, address a where u.address_id = a.id";
+    private final String SQL_USER_TO_ADDRESS_CREATE = "insert into users_to_address(user_id, address_id) values(?,?)";
+    private final String SQL_USER_TO_ADDRESS_UPDATE = "update users_to_address set user_id=?, address_id=? where id=?";
+    private final String SQL_USER_TO_ADDRESS_DELETE = "delete from users_to_address where user_id=? and address_id=?";
+
+    private final String SQL_GET_ALL_USERS = "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2,a.address_1, a.address_2,a.city,a.state,a.zip_code,u.password,ua.address_id from user u, address a,users_to_address ua where ua.address_id = a.id and ua.user_id=u.id";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -82,12 +86,22 @@ public class UserServiceDaoImpl implements UserServiceDao {
                 ps.setString(5, user.getPhoneNumber2());
                 ps.setString(6, user.getPassword());
                 ps.setBoolean(7, true);
-                ps.setLong(8, addressId);
                 return ps;
             }
         }, keyHolder);
 
         Long userId = keyHolder.getKey().longValue();
+
+        // Now create a record in users_to_address table
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement ps = connection.prepareStatement(SQL_USER_TO_ADDRESS_CREATE, Statement.RETURN_GENERATED_KEYS);
+                ps.setLong(1, userId);
+                ps.setLong(2, addressId);
+                return ps;
+            }
+        }, keyHolder);
 
         return getUserById(userId);
     }
