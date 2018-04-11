@@ -3,6 +3,7 @@ package com.projects.ricefactory.service.impl;
 import com.projects.ricefactory.dto.User;
 import com.projects.ricefactory.mapper.UserRecordMapper;
 import com.projects.ricefactory.service.UserServiceDao;
+import com.projects.ricefactory.utils.MySqlQueries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -30,22 +31,6 @@ import java.util.List;
 )
 public class UserServiceDaoImpl implements UserServiceDao {
 
-    private final String SQL_USER_GET_BY_ID = "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2,a.address_1, a.address_2,a.city,a.state,a.zip_code,u.password,ua.address_id from user u, address a, users_to_address ua where ua.user_id=? and ua.address_id = a.id and ua.user_id=u.id";
-
-    private final String SQL_USER_GET_BY_EMAIL = "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2,a.address_1, a.address_2,a.city,a.state,a.zip_code,u.password,ua.address_id from user u, address a,users_to_address ua where u.email=? and ua.address_id = a.id and ua.user_id=u.id ";
-
-    private final String SQL_ADDRESS_CREATE = "insert into address(address_1,address_2,city,state,zip_code) values(?,?,?,?,?)";
-    private final String SQL_ADDRESS_UPDATE = "update address set address_1=?,address_2=?,city=?,state=?,zip_code=? where id=?";
-
-    private final String SQL_USER_CREATE = "insert into user(first_name,last_name,email,phone_number_1, phone_number_2, password, enabled) values(?,?,?,?,?,?,?)";
-    private final String SQL_USER_UPDATE = "update user set first_name=?,last_name=?,email=?,phone_number_1=?,phone_number_2=?,password=?,enabled=? where id=?";
-
-    private final String SQL_USER_TO_ADDRESS_CREATE = "insert into users_to_address(user_id, address_id) values(?,?)";
-    private final String SQL_USER_TO_ADDRESS_UPDATE = "update users_to_address set user_id=?, address_id=? where id=?";
-    private final String SQL_USER_TO_ADDRESS_DELETE = "delete from users_to_address where user_id=? and address_id=?";
-
-    private final String SQL_GET_ALL_USERS = "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2,a.address_1, a.address_2,a.city,a.state,a.zip_code,u.password,ua.address_id from user u, address a,users_to_address ua where ua.address_id = a.id and ua.user_id=u.id";
-
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -62,7 +47,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(SQL_ADDRESS_CREATE, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = connection.prepareStatement(MySqlQueries.SQL_ADDRESS_CREATE, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, user.getAddress1());
                 ps.setString(2, user.getAddress2());
                 ps.setString(3, user.getCity());
@@ -78,7 +63,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(SQL_USER_CREATE, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = connection.prepareStatement(MySqlQueries.SQL_USER_CREATE, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, user.getFirstName());
                 ps.setString(2, user.getLastName());
                 ps.setString(3, user.getEmail());
@@ -92,11 +77,11 @@ public class UserServiceDaoImpl implements UserServiceDao {
 
         Long userId = keyHolder.getKey().longValue();
 
-        // Now create a record in users_to_address table
+        // Now create a record in userAddress table
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(SQL_USER_TO_ADDRESS_CREATE, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = connection.prepareStatement(MySqlQueries.SQL_USER_TO_ADDRESS_CREATE, Statement.RETURN_GENERATED_KEYS);
                 ps.setLong(1, userId);
                 ps.setLong(2, addressId);
                 return ps;
@@ -117,7 +102,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(SQL_USER_UPDATE);
+                PreparedStatement ps = connection.prepareStatement(MySqlQueries.SQL_USER_UPDATE);
                 ps.setString(1, updatedUser.getFirstName());
                 ps.setString(2, updatedUser.getLastName());
                 ps.setString(3, updatedUser.getEmail());
@@ -134,7 +119,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(SQL_ADDRESS_UPDATE);
+                PreparedStatement ps = connection.prepareStatement(MySqlQueries.SQL_ADDRESS_UPDATE);
                 ps.setString(1, updatedUser.getAddress1());
                 ps.setString(2, updatedUser.getAddress2());
                 ps.setString(3, updatedUser.getCity());
@@ -154,7 +139,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
 
         try {
             User userObject = this.jdbcTemplate.queryForObject(
-                    SQL_USER_GET_BY_ID,
+                    MySqlQueries.SQL_USER_GET_BY_ID,
                     new Object[]{id},
                     new UserRecordMapper());
 
@@ -167,7 +152,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
 
     @Override
     public List<User> getAllUsers() {
-        return this.jdbcTemplate.query(SQL_GET_ALL_USERS, new BeanPropertyRowMapper(User.class));
+        return this.jdbcTemplate.query(MySqlQueries.SQL_GET_ALL_USERS, new BeanPropertyRowMapper(User.class));
     }
 
     @Override
@@ -182,7 +167,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
     @Override
     public User getUserByEmail(String email) {
         User userObject = this.jdbcTemplate.queryForObject(
-                SQL_USER_GET_BY_EMAIL,
+                MySqlQueries.SQL_USER_GET_BY_EMAIL,
                 new Object[]{email},
                 new UserRecordMapper());
 

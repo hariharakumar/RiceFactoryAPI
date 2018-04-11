@@ -10,7 +10,7 @@ public interface OrderServiceDao {
 
     public Order createOrder(Order order) throws Exception;
 
-    public Order updateOrder(Order existingOrder, Order updatedOrder) throws Exception;
+    public Order updateOrder(Order updatedOrder) throws Exception;
 
     public Order getOrderById(Long id);
 
@@ -18,5 +18,5 @@ public interface OrderServiceDao {
 
     public void deleteOrder(Long id);
 
-    public List<Order> getOrderByUserId(String email);
+    public List<Order> getOrdersByUserEmail(String email);
 }

@@ -1,5 +1,6 @@
 buildscript {
 	ext {
+        // Specifies which version of spring jars you want to download.
 		springBootVersion = '1.4.2.RELEASE'
 	}
 	repositories {
@@ -62,7 +63,8 @@ springBoot {
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    // One of these downloads multiple spring related jars into the project
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
 	compile('org.springframework.boot:spring-boot-starter-jersey')
 	compile('org.springframework.boot:spring-boot-starter-web')

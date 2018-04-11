@@ -52,7 +52,7 @@ public class UserController {
                 return new ResponseEntity<User>(responseHeaders,HttpStatus.NOT_FOUND);
             }
 
-            return new ResponseEntity<User>(user, responseHeaders, HttpStatus.OK);
+            return new ResponseEntity(user, responseHeaders, HttpStatus.OK);
         }catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("Access-Control-Allow-Origin","*").body("Error while processing request");
         }
@@ -64,13 +64,13 @@ public class UserController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity getUsers() {
+    public ResponseEntity searchUsers() {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
 
         try {
-            Map<String, String[]> queryParamsMap = (Map<String, String[]>)request.getParameterMap();
+            Map<String, String[]> queryParamsMap = request.getParameterMap();
 
             // TODO : Make it generic to get User by any attribute
             String email = queryParamsMap.get("email")[0];
