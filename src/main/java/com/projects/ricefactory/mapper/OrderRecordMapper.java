@@ -1,7 +1,7 @@
 package com.projects.ricefactory.mapper;
 
 import com.projects.ricefactory.dto.Order;
-import com.projects.ricefactory.service.RiceTypeDao;
+import com.projects.ricefactory.service.RiceTypeServiceDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -14,13 +14,13 @@ import java.sql.SQLException;
 public class OrderRecordMapper implements RowMapper<Order> {
 
     @Autowired
-    RiceTypeDao riceTypeDao;
+    RiceTypeServiceDao riceTypeServiceDao;
 
     @Override
     public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
         Order order = new Order();
         order.setPolished(rs.getBoolean("o.polished"));
-        order.setRiceType(riceTypeDao.getRiceTypeById(rs.getLong("o.riceTypeId")).getDisplayName());
+        order.setRiceType(riceTypeServiceDao.getRiceTypeById(rs.getLong("o.riceTypeId")).getDisplayName());
         order.setAmountInKilograms(rs.getLong("o.amount_in_kgs"));
         order.setTotalPrice(rs.getLong("o.total_cost"));
         order.setDeliveryDate(rs.getString("o.delivery_date"));

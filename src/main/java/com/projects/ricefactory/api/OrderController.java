@@ -60,7 +60,6 @@ public class OrderController {
     public ResponseEntity updateOrder(@RequestBody Order updatedOrder){
         try {
 
-            // First get the existing Order and set the id to updatedOrder
             Order existingOrder = orderServiceDao.getOrderById(updatedOrder.getId());
 
             if(existingOrder == null) {

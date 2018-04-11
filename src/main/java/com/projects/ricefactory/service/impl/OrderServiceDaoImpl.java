@@ -4,7 +4,7 @@ import com.projects.ricefactory.dto.Order;
 import com.projects.ricefactory.dto.RiceType;
 import com.projects.ricefactory.mapper.OrderRecordMapper;
 import com.projects.ricefactory.service.OrderServiceDao;
-import com.projects.ricefactory.service.RiceTypeDao;
+import com.projects.ricefactory.service.RiceTypeServiceDao;
 import com.projects.ricefactory.utils.MySqlQueries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,7 +18,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
     JdbcTemplate jdbcTemplate;
 
     @Autowired
-    RiceTypeDao riceTypeDao;
+    RiceTypeServiceDao riceTypeServiceDao;
 
     @Override
     public Order createOrder(Order order) throws Exception {
@@ -39,7 +38,7 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         //TODO: verify if rice_type_id and user_to_address_id are valid : Query DB to validate.
-        RiceType riceType = riceTypeDao.getRiceTypeByInternalName(order.getRiceType());
+        RiceType riceType = riceTypeServiceDao.getRiceTypeByInternalName(order.getRiceType());
         // java8 considers this as effectively final, thats why don't have to declare it final
         java.sql.Date deliveryDate = new java.sql.Date(order.getDeliveryDate().getTime());
 
@@ -65,7 +64,7 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
     @Override
     public Order updateOrder(Order updatedOrder) throws Exception {
 
-        long riceTypeId = riceTypeDao.getRiceTypeByDisplayName(updatedOrder.getRiceType()).getId();
+        long riceTypeId = riceTypeServiceDao.getRiceTypeByDisplayName(updatedOrder.getRiceType()).getId();
         java.sql.Date deliveryDate = new java.sql.Date(updatedOrder.getDeliveryDate().getTime());
 
         jdbcTemplate.update(new PreparedStatementCreator() {

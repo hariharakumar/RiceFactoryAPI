@@ -50,6 +50,10 @@ public class MySqlQueries {
 
     public final static String SQL_ADDRESS_UPDATE = "update address set address_1=?,address_2=?,city=?,state=?,zip_code=? where id=?";
 
+    public final static String SQL_RICE_TYPE_CREATE = "insert into riceType(`display_name`,`internal_name`,`price_per_kg`,`description`" +
+            " values(?,?,?,?))";
+    public final static String SQL_RICE_TYPE_UPDATE = "update riceType set display_name=?,internal_name=?,price_per_kg=?,description=? where id=?";
+
     public final static String SQL_RICE_TYPE_GET_INTERNAL_NAME =
             "select rt.id, rt.display_name,rt.internal_name,rt.price_per_kg,rt.description" +
             " from riceType rt " +
