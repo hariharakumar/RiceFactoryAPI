@@ -85,11 +85,11 @@ public class MySqlQueries {
             "select o.id, o.polished, o.riceTypeId, o.amount_in_kgs,o.total_cost,o.delivery_date,o.user_to_address_id,o.date_created,o.last_updated,o.customer_notes, o.cancelled " +
             "from `order` o where o.id=?";
 
-    public final static String SQL_GET_ORDERS_BY_USER_ID =
-            "select rt.`display_name`, o.`amount_in_kgs`, o.`total_cost`, o.`delivery_date`, o.`customer_notes`, o.`polished`," +
+    public final static String SQL_GET_ORDERS_BY_USER_EMAIL =
+            "select o.`id`, rt.`display_name`, o.`amount_in_kgs`, o.`total_cost`, o.`delivery_date`, o.`customer_notes`, o.`polished`," +
             "o.`user_to_address_id`, o.`date_created`, o.`last_updated`, o.`cancelled` " +
-            "from `order` o, `userAddress` ua, riceType rt " +
-            "where o.`user_to_address_id` = ua.`id` and o.`riceTypeId` = rt.`id` and ua.`user_id` = ?";
+            "from `order` o, `userAddress` ua, riceType rt, `user` u " +
+            "where o.`user_to_address_id` = ua.`id` and o.`riceTypeId` = rt.`id` and ua.`user_id` = u.id and u.email=?";
 
 
 }

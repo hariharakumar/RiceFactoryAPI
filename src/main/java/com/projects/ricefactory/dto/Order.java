@@ -14,6 +14,7 @@ public class Order {
     private String riceType;
     private Long amountInKilograms;
     private Long totalPrice;
+
     private String deliveryDate;
     private String customerNotes;
     private Boolean polished;
@@ -22,8 +23,9 @@ public class Order {
     private String orderUpdateDate;
     private Boolean cancelled;
 
-    public Order(String riceType, Long amountInKilograms, Long totalPrice, String deliveryDate, String customerNotes, Boolean polished,
+    public Order(Long id, String riceType, Long amountInKilograms, Long totalPrice, String deliveryDate, String customerNotes, Boolean polished,
                  Long userToAddressId, String orderCreatedDate, String orderUpdateDate, Boolean cancelled) {
+        this.id=id;
         this.riceType = riceType;
         this.amountInKilograms = amountInKilograms;
         this.totalPrice = totalPrice;
@@ -103,14 +105,18 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public Date getDeliveryDate() throws ParseException{
-        DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
+    public Date convertDeliveryDate() throws ParseException{
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             return dateFormat.parse(this.deliveryDate);
         }
         catch (ParseException pe) {
             throw pe;
         }
+    }
+
+    public String getDeliveryDate() {
+        return deliveryDate;
     }
 
     public void setDeliveryDate(String deliveryDate) {

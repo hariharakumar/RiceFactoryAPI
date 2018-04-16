@@ -14,10 +14,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 /**
@@ -40,7 +37,7 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
         //TODO: verify if rice_type_id and user_to_address_id are valid : Query DB to validate.
         RiceType riceType = riceTypeServiceDao.getRiceTypeByInternalName(order.getRiceType());
         // java8 considers this as effectively final, thats why don't have to declare it final
-        java.sql.Date deliveryDate = new java.sql.Date(order.getDeliveryDate().getTime());
+        Timestamp timestamp = new Timestamp(order.convertDeliveryDate().getTime());
 
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
@@ -50,7 +47,7 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
                 ps.setLong(2, riceType.getId());
                 ps.setFloat(3,order.getAmountInKilograms());
                 ps.setFloat(4, (riceType.getPrice_per_kg()*order.getAmountInKilograms()));
-                ps.setDate(5, deliveryDate);
+                ps.setTimestamp(5, timestamp);
                 ps.setLong(6, order.getUserToAddressId());
                 ps.setString(7, order.getCustomerNotes());
                 ps.setBoolean(8, order.getCancelled());
@@ -65,7 +62,7 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
     public Order updateOrder(Order updatedOrder) throws Exception {
 
         long riceTypeId = riceTypeServiceDao.getRiceTypeByDisplayName(updatedOrder.getRiceType()).getId();
-        java.sql.Date deliveryDate = new java.sql.Date(updatedOrder.getDeliveryDate().getTime());
+        Timestamp timestamp = new Timestamp(updatedOrder.convertDeliveryDate().getTime());
 
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
@@ -75,7 +72,7 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
                 ps.setLong(2, riceTypeId);
                 ps.setFloat(3, updatedOrder.getAmountInKilograms());
                 ps.setFloat(4, updatedOrder.getTotalPrice());
-                ps.setDate(5, deliveryDate);
+                ps.setTimestamp(5, timestamp);
                 ps.setLong(6, updatedOrder.getUserToAddressId());
                 ps.setString(7, updatedOrder.getCustomerNotes());
                 ps.setBoolean(8, updatedOrder.getCancelled());
@@ -119,9 +116,9 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
     @Override
     public List<Order> getOrdersByUserEmail(String email) {
         List<Order> result = jdbcTemplate.query(
-                            MySqlQueries.SQL_GET_ORDERS_BY_USER_ID,
+                            MySqlQueries.SQL_GET_ORDERS_BY_USER_EMAIL, new Object[] {email},
                             (rs, rowNum) -> new Order(
-                                            rs.getString("display_name"), rs.getLong("amount_in_kgs"),
+                                            rs.getLong("id"),rs.getString("display_name"), rs.getLong("amount_in_kgs"),
                                             rs.getLong("total_cost"), rs.getString("delivery_date"), rs.getString("customer_notes"),
                                             rs.getBoolean("polished"),rs.getLong("user_to_address_id"),
                                             rs.getString("date_created"), rs.getString("last_updated"), rs.getBoolean("cancelled")));

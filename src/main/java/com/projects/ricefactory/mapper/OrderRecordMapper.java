@@ -15,8 +15,8 @@ import java.sql.SQLException;
  */
 public class OrderRecordMapper implements RowMapper<Order> {
 
-    @Autowired
-    RiceTypeServiceDao riceTypeServiceDao;
+    java.text.SimpleDateFormat sdf =
+            new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -28,10 +28,10 @@ public class OrderRecordMapper implements RowMapper<Order> {
         //order.setRiceType(riceTypeServiceDao.getRiceTypeById(rs.getLong("o.riceTypeId")).getDisplayName());
         order.setAmountInKilograms(rs.getLong("o.amount_in_kgs"));
         order.setTotalPrice(rs.getLong("o.total_cost"));
-        order.setDeliveryDate(rs.getString("o.delivery_date"));
+        order.setDeliveryDate(sdf.format(rs.getTimestamp("o.delivery_date")));
         order.setCustomerNotes(rs.getString("o.customer_notes"));
-        order.setOrderCreatedDate(rs.getDate("o.date_created").toString());
-        order.setOrderUpdateDate(rs.getDate("o.last_updated").toString());
+        order.setOrderCreatedDate(sdf.format(rs.getTimestamp("o.date_created")));
+        order.setOrderUpdateDate(sdf.format(rs.getTimestamp("o.last_updated")));
         order.setCancelled(rs.getBoolean("o.cancelled"));
         return order;
     }
