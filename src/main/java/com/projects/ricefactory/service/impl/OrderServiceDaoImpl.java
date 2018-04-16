@@ -49,7 +49,7 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
                 ps.setBoolean(1, order.getPolished());
                 ps.setLong(2, riceType.getId());
                 ps.setFloat(3,order.getAmountInKilograms());
-                ps.setFloat(4, order.getTotalPrice());
+                ps.setFloat(4, (riceType.getPrice_per_kg()*order.getAmountInKilograms()));
                 ps.setDate(5, deliveryDate);
                 ps.setLong(6, order.getUserToAddressId());
                 ps.setString(7, order.getCustomerNotes());
@@ -95,6 +95,8 @@ public class OrderServiceDaoImpl implements OrderServiceDao {
                     new Object[]{id},
                     new OrderRecordMapper()
             );
+            Long riceTypeId = Long.parseLong(order.getRiceType());
+            order.setRiceType(riceTypeServiceDao.getRiceTypeById(riceTypeId).getDisplayName());
             return order;
         }
         catch (EmptyResultDataAccessException e) {

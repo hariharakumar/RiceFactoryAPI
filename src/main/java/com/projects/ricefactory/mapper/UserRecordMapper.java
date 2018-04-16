@@ -26,7 +26,7 @@ public class UserRecordMapper implements RowMapper<User> {
             user.setCity(rs.getString("a.city"));
             user.setState(rs.getString("a.state"));
             user.setZipCode(rs.getString("a.zip_code"));
-            user.setAddressId(rs.getLong("u.address_id"));
+            user.setAddressId(rs.getLong("ua.address_id"));
             return user;
     }
 }

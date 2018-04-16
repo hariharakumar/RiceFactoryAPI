@@ -21,9 +21,6 @@ public class RiceTypeController {
     @Autowired
     private RiceTypeServiceDao riceTypeServiceDao;
 
-    @Autowired
-    private HttpServletRequest request;
-
     @RequestMapping(
             value = "/v1/riceTypes/{id}",
             method = RequestMethod.GET,

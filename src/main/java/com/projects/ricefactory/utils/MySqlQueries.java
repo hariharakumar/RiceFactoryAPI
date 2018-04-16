@@ -9,7 +9,7 @@ public class MySqlQueries {
             "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2," +
             "a.address_1, a.address_2,a.city,a.state,a.zip_code," +
             "u.password,ua.address_id " +
-            "from user u, address a, userAddress ua " +
+            "from `user` u, address a, userAddress ua " +
             "where ua.user_id=? " +
             "and ua.address_id = a.id " +
             "and ua.user_id=u.id";
@@ -18,16 +18,16 @@ public class MySqlQueries {
             "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2," +
             "a.address_1, a.address_2,a.city,a.state,a.zip_code," +
             "u.password,ua.address_id " +
-            "from user u, address a,userAddress ua " +
+            "from `user` u, address a,userAddress ua " +
             "where u.email=? " +
             "and ua.address_id = a.id " +
             "and ua.user_id=u.id ";
 
     public final static String SQL_USER_CREATE =
-            "insert into user(first_name,last_name,email,phone_number_1, phone_number_2, password, enabled)" +
+            "insert into `user`(first_name,last_name,email,phone_number_1, phone_number_2, password, enabled)" +
             " values(?,?,?,?,?,?,?)";
     public final static String SQL_USER_UPDATE =
-            "update user set first_name=?,last_name=?,email=?,phone_number_1=?,phone_number_2=?,password=?,enabled=? where id=?";
+            "update `user` set first_name=?,last_name=?,email=?,phone_number_1=?,phone_number_2=?,password=?,enabled=? where id=?";
 
     public final static String SQL_USER_TO_ADDRESS_CREATE = "insert into userAddress(user_id, address_id) values(?,?)";
 
@@ -41,17 +41,17 @@ public class MySqlQueries {
             "select u.id, u.first_name, u.last_name, u.email, u.phone_number_1, u.phone_number_2," +
             "a.address_1, a.address_2,a.city,a.state,a.zip_code," +
             "u.password,ua.address_id " +
-            "from user u, address a,userAddress ua " +
+            "from `user` u, address a,userAddress ua " +
             "where ua.address_id = a.id and ua.user_id=u.id";
 
-    public final static String SQL_GET_ID_BY_EMAIL = "select id from user where email=?";
+    public final static String SQL_GET_ID_BY_EMAIL = "select id from `user` where email=?";
 
     public final static String SQL_ADDRESS_CREATE = "insert into address(address_1,address_2,city,state,zip_code) values(?,?,?,?,?)";
 
     public final static String SQL_ADDRESS_UPDATE = "update address set address_1=?,address_2=?,city=?,state=?,zip_code=? where id=?";
 
-    public final static String SQL_RICE_TYPE_CREATE = "insert into riceType(`display_name`,`internal_name`,`price_per_kg`,`description`" +
-            " values(?,?,?,?))";
+    public final static String SQL_RICE_TYPE_CREATE = "insert into riceType(`display_name`,`internal_name`,`price_per_kg`,`description`)" +
+            " values(?,?,?,?)";
     public final static String SQL_RICE_TYPE_UPDATE = "update riceType set display_name=?,internal_name=?,price_per_kg=?,description=? where id=?";
 
     public final static String SQL_RICE_TYPE_GET_INTERNAL_NAME =
@@ -71,16 +71,19 @@ public class MySqlQueries {
             "select rt.id, rt.display_name,rt.internal_name,rt.price_per_kg,rt.description" +
                     " from riceType rt ";
 
+    public final static String SQL_RICE_TYPE_DELETE =
+            "delete from riceType where id = ?";
+
     public final static String SQL_ORDER_CREATE =
-            "insert into order(polished,riceTypeId,amount_in_kgs,total_cost,delivery_date,user_to_address_id,customer_notes,cancelled)" +
+            "insert into `order`(polished,riceTypeId,amount_in_kgs,total_cost,delivery_date,user_to_address_id,customer_notes,cancelled)" +
             " values(?,?,?,?,?,?,?,?)";
 
     public final static String SQL_ORDER_UPDATE =
-            "update order set polished=?,riceTypeId=?,amount_in_kgs=?,total_cost=?,delivery_date=?,user_to_address_id=?,customer_notes=?,cancelled=?";
+            "update `order` set polished=?,riceTypeId=?,amount_in_kgs=?,total_cost=?,delivery_date=?,user_to_address_id=?,customer_notes=?,cancelled=?";
 
     public final static String SQL_ORDER_GET =
-            "select o.polished, o.riceTypeId, o.amount_in_kgs,o.total_cost,o.delivery_date,o.user_to_address_id,o.date_created,o.last_updated,o.customer_notes, o.cancelled " +
-            "from order o where o.id=?";
+            "select o.id, o.polished, o.riceTypeId, o.amount_in_kgs,o.total_cost,o.delivery_date,o.user_to_address_id,o.date_created,o.last_updated,o.customer_notes, o.cancelled " +
+            "from `order` o where o.id=?";
 
     public final static String SQL_GET_ORDERS_BY_USER_ID =
             "select rt.`display_name`, o.`amount_in_kgs`, o.`total_cost`, o.`delivery_date`, o.`customer_notes`, o.`polished`," +

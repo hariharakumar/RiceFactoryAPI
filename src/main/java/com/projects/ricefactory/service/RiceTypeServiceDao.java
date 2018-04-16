@@ -21,4 +21,6 @@ public interface RiceTypeServiceDao {
 
     public RiceType getRiceTypeByDisplayName(String displayName);
 
+    public void deleteRiceType(Long riceTypeId);
+
 }

@@ -44,7 +44,7 @@ public class OrderController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unable to create User record");
             }
 
-            return new ResponseEntity<Order>(createdOrder, HttpStatus.CREATED);
+            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
 
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getLocalizedMessage() + "Error while processing request");

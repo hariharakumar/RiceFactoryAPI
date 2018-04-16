@@ -122,4 +122,9 @@ public class RiceTypeServiceServiceDaoImpl implements RiceTypeServiceDao {
             return null;
         }
     }
+
+    @Override
+    public void deleteRiceType(Long riceTypeId) {
+
+    }
 }
