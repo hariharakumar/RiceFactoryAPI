@@ -2,6 +2,8 @@ package com.projects.ricefactory.api;
 
 import com.projects.ricefactory.dto.User;
 import com.projects.ricefactory.service.UserServiceDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,9 @@ public class UserController {
     // TODO : Write validations for JSON fields
     // TODO : Write authorization for all requests
     // TODO : Encode the password.
+    //TODO : Add user roles , and add rules that says only admin can see certain API's
+
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserServiceDao userServiceDao;
@@ -44,6 +49,8 @@ public class UserController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
+
+        logger.debug("Entered method to GET a user : " + id);
 
         try {
             User user = userServiceDao.getUserById(id);
@@ -98,6 +105,8 @@ public class UserController {
 
         /*HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");*/
+
+        logger.debug("Entered method to Create user");
 
         try {
 
