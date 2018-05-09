@@ -3,6 +3,8 @@ package com.projects.ricefactory.api;
 import com.projects.ricefactory.dto.RiceType;
 import com.projects.ricefactory.service.RiceTypeServiceDao;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,8 @@ import java.util.List;
 @RestController
 public class RiceTypeController {
 
+    private final Logger logger = LoggerFactory.getLogger(RiceTypeController.class);
+
     @Autowired
     private RiceTypeServiceDao riceTypeServiceDao;
 
@@ -29,6 +33,8 @@ public class RiceTypeController {
     public ResponseEntity getRiceType(@PathVariable("id") Long id) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
+
+        logger.debug("Getting riceType with id : " + id);
 
         try {
             RiceType riceType = riceTypeServiceDao.getRiceTypeById(id);
@@ -53,6 +59,8 @@ public class RiceTypeController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
 
+        logger.debug("Get all rice types");
+
         try {
             List<RiceType> allRiceTypes = riceTypeServiceDao.getAllRiceTypes();
 
@@ -75,6 +83,8 @@ public class RiceTypeController {
     )
     public ResponseEntity createRiceType(@RequestBody RiceType riceType) {
 
+        logger.debug("Creating rice type");
+
         try {
             RiceType createdRiceType = riceTypeServiceDao.createRiceType(riceType);
 
@@ -96,6 +106,9 @@ public class RiceTypeController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity updateRiceType(@RequestBody RiceType updatedRiceType){
+
+        logger.debug("Updating rice type");
+
         try {
 
             RiceType existingRiceType = riceTypeServiceDao.getRiceTypeById(updatedRiceType.getId());

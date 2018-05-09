@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="DEV_HOME" value="/var/personal_projects/rice_factory" />
+
+    <appender name="FILE-AUDIT"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${DEV_HOME}/rice_factory_service.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} - ${LOG_LEVEL_PATTERN:-%5p} - ${PID:- } - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover weekly -->
+            <fileNamePattern>${DEV_HOME}/archived/rice_factory_service.%d{yyyy-ww}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>20MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+    </appender>
+
+    <logger name="com.projects.ricefactory" level="debug"
+            additivity="false">
+        <appender-ref ref="FILE-AUDIT" />
+    </logger>
+
+    <root level="error">
+        <appender-ref ref="FILE-AUDIT" />
+    </root>
+
+</configuration>

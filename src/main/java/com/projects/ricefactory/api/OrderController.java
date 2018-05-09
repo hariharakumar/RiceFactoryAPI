@@ -2,6 +2,8 @@ package com.projects.ricefactory.api;
 
 import com.projects.ricefactory.dto.Order;
 import com.projects.ricefactory.service.OrderServiceDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,8 @@ import java.util.Map;
 @Controller
 public class OrderController {
 
+    private final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
     @Autowired(required=true)
     private HttpServletRequest request;
 
@@ -36,6 +40,8 @@ public class OrderController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity createOrder(@RequestBody Order order) {
+
+        logger.debug("Creating an Order");
 
         try {
             Order createdOrder = orderServiceDao.createOrder(order);
@@ -57,10 +63,13 @@ public class OrderController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity updateOrder(@RequestBody Order updatedOrder){
+    public ResponseEntity updateOrder(@RequestBody Order updatedOrder, @PathVariable("id") Long orderId){
+
+        logger.debug("Updating order : " + orderId);
+
         try {
 
-            Order existingOrder = orderServiceDao.getOrderById(updatedOrder.getId());
+            Order existingOrder = orderServiceDao.getOrderById(orderId);
 
             if(existingOrder == null) {
                 return new ResponseEntity<Order>(HttpStatus.NOT_FOUND);
@@ -84,6 +93,8 @@ public class OrderController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
+
+        logger.debug("Getting order with  id : " + id);
 
         try {
             Order order = orderServiceDao.getOrderById(id);
@@ -109,10 +120,14 @@ public class OrderController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
 
+        logger.debug("Getting all orders for a user : ");
+
         try {
             Map<String, String[]> queryParamsMap = request.getParameterMap();
 
             String email = queryParamsMap.get("email")[0];
+
+            logger.debug("Search parameter in the request : email : " + email);
             List<Order> orders = orderServiceDao.getOrdersByUserEmail(email);
 
             if (orders.size() == 0) {

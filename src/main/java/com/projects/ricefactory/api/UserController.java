@@ -12,11 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpUtils;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +24,9 @@ public class UserController {
     // TODO : Write all exception logic.
     // TODO : Write validations for JSON fields
     // TODO : Write authorization for all requests
-    // TODO : Encode the password.
-    //TODO : Add user roles , and add rules that says only admin can see certain API's
+    // TODO : Hash the password - SHA-256 and save it.
+    // TODO : Add user roles , and add rules that says only admin can see certain API's
+    // TODO : Figure out how actuator works
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -75,6 +71,8 @@ public class UserController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
+
+        logger.debug("Entered method to search users ");
 
         try {
             Map<String, String[]> queryParamsMap = request.getParameterMap();
@@ -133,6 +131,8 @@ public class UserController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Access-Control-Allow-Origin", "*");
 
+        logger.debug("Entered method to Update user : " + userId);
+
         try {
 
             User existingUser = userServiceDao.getUserById(userId);
@@ -156,6 +156,8 @@ public class UserController {
     )
     public ResponseEntity deleteUser(@PathVariable("id") Long id) {
 
+        logger.debug("Entered method to Delete user : " + id);
+
         try {
 
             User user = userServiceDao.getUserById(id);
@@ -173,15 +175,17 @@ public class UserController {
 
     }
 
-    // TODO : Uncomment this method if needed
-    /*@RequestMapping(
-            value = "/v1/users",
+    //TODO :  Restrict this API to be able to accessed only for admins.
+    @RequestMapping(
+            value = "/v1/allUsers",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity getAllUsers() {
 
         try {
+
+            logger.debug("Getting all users in the system ");
 
             List<User> users = userServiceDao.getAllUsers();
 
@@ -194,6 +198,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while processing request");
         }
 
-    }*/
+    }
 
 }

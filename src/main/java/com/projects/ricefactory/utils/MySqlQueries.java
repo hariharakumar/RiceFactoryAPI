@@ -90,6 +90,4 @@ public class MySqlQueries {
             "o.`user_to_address_id`, o.`date_created`, o.`last_updated`, o.`cancelled` " +
             "from `order` o, `userAddress` ua, riceType rt, `user` u " +
             "where o.`user_to_address_id` = ua.`id` and o.`riceTypeId` = rt.`id` and ua.`user_id` = u.id and u.email=?";
-
-
 }
