@@ -2,6 +2,7 @@ package com.projects.ricefactory.api;
 
 import com.projects.ricefactory.dto.User;
 import com.projects.ricefactory.service.UserServiceDao;
+import com.projects.ricefactory.service.impl.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class UserController {
 
     @Autowired
     private UserServiceDao userServiceDao;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired(required=true)
     private HttpServletRequest request;
@@ -113,7 +117,12 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unable to create User record");
             }
 
-            return new ResponseEntity<User>(createdUserObject, HttpStatus.CREATED);
+            // Create JWT token for the user
+            String userJwtToken = tokenService.createToken(createdUserObject.getId());
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.add("jwtToken", userJwtToken);
+
+            return new ResponseEntity<User>(createdUserObject, responseHeaders, HttpStatus.CREATED);
 
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getLocalizedMessage() + "Error while processing request");
