@@ -24,12 +24,14 @@ public class JWTFilter extends GenericFilterBean {
     @Autowired
     Environment env;
 
-    private TokenService tokenService;
+    @Autowired
+    TokenService tokenService;
+
     private static final String UNAUTHORIZED = "Unauthorized token";
     private static final String INVALID_TOKEN_FORMAT_MSG = "Invalid token format. Correct format: Bearer XXXX";
 
     JWTFilter() {
-        this.tokenService = new TokenService(env);
+        //this.tokenService = new TokenService();
     }
 
     @Override

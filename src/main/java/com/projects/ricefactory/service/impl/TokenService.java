@@ -24,6 +24,9 @@ public class TokenService {
 
     private final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
+    public TokenService() {
+    }
+
     public TokenService(Environment env) {
         this.env = env;
     }
