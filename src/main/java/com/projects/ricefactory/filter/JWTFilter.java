@@ -41,10 +41,6 @@ public class JWTFilter extends GenericFilterBean {
 
         HttpServletResponse httpServletResponse = null;
 
-        if(Boolean.parseBoolean(env.getProperty("enable.jwt.token")) == false) {
-            filterChain.doFilter(request, response);
-        }
-
         try {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             httpServletResponse = (HttpServletResponse) response;
@@ -59,6 +55,11 @@ public class JWTFilter extends GenericFilterBean {
                 httpServletResponse.setStatus(HttpServletResponse.SC_OK);
                 filterChain.doFilter(request, response);
             } else {
+
+                // Disabling for temporary purpose
+                if(Boolean.parseBoolean(env.getProperty("enable.jwt.token")) == false) {
+                    filterChain.doFilter(request, response);
+                }
 
                 String[] tokens = jwtToken.split(" ");
 

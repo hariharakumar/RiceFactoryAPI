@@ -5,6 +5,12 @@
    - Attached sample logback.xml file to the project.
 
 -- Application uses JWT. Use jwt.io to decode the token and see claims in the payload.
-   - Claims contain following fields : userId, createdAt
+   - JWT token will be returned as Header in create user request - This is the only request that does not need JWT token.
+   - Store the JWT returned as part of create user response and use that for subsequent requests.
+   - Claims contain following fields : userId, iat, exp
    - jwt secret key is present in application.properties file
+   - You can enable JWT by setting enable.jwt.token property to true.
+   - JWT token expires in 1 day
+   - Sample JWT for testing purposes that will expire in few years : eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE4Mjg4OTQyNTAsInVzZXJJZCI6IjEwIiwiaWF0IjoxNDI4ODA3ODUyfQ.FiUha_zd1UrPzu16dSxwo56aTVX09KXCcZwQy-SYH3s
+
 
