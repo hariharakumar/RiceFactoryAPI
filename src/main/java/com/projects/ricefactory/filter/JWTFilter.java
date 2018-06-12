@@ -41,6 +41,10 @@ public class JWTFilter extends GenericFilterBean {
 
         HttpServletResponse httpServletResponse = null;
 
+        if(Boolean.parseBoolean(env.getProperty("enable.jwt.token")) == false) {
+            filterChain.doFilter(request, response);
+        }
+
         try {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             httpServletResponse = (HttpServletResponse) response;
@@ -112,6 +116,4 @@ public class JWTFilter extends GenericFilterBean {
         }
         return false;
     }
-
-    // TODO : remove this  : source of JWT implementation : https://medium.com/oril/secure-your-spring-boot-api-with-json-web-tokens-44aa9dc51fdc
 }

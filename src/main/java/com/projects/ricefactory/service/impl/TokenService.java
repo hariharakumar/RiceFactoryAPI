@@ -17,7 +17,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TokenService {
@@ -36,13 +38,16 @@ public class TokenService {
     public String createToken(Object userId) {
 
         String tokenSecret = env.getProperty("jwt.secret.key");
+        Long dayPlusOne = new Date().getTime() + TimeUnit.DAYS.toMillis(1);
 
         // Each key-value pair in JWT Token is a claim.
         try {
 
             Algorithm algorithm = Algorithm.HMAC256(tokenSecret);
             String token = JWT.create().withClaim("userId", userId.toString()).
-                           withClaim("createdAt", (System.currentTimeMillis())/1000).sign(algorithm);
+                           withClaim("iat", new Date()).
+                           withClaim("exp", new Date(dayPlusOne)) // JWT Expires in 1 day
+                           .sign(algorithm);
             return token;
         }
         catch (UnsupportedEncodingException uee) {
