@@ -3,6 +3,7 @@ package com.projects.ricefactory.filter;
 
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
+import com.auth0.jwt.interfaces.Claim;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projects.ricefactory.service.impl.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @Configuration
 public class JWTFilter extends GenericFilterBean {
@@ -72,14 +74,11 @@ public class JWTFilter extends GenericFilterBean {
                     httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 } else {
 
-                    JSONObject claimsFromJwtToken = tokenService.getClaimsFromJwtToken(token);
+                    Map<String, Claim> claimsFromJwtToken = tokenService.getClaimsFromJwtToken(token);
                     String userId = null;
 
-                    try {
-                        userId = claimsFromJwtToken.getString("userId");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+
+                    userId = claimsFromJwtToken.get("userId").asString();
 
                     request.setAttribute("userId", userId);
                     filterChain.doFilter(request, response);

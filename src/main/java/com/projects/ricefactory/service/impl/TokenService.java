@@ -7,6 +7,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 @Service
 public class TokenService {
@@ -54,7 +56,7 @@ public class TokenService {
         return null;
     }
 
-    public JSONObject getClaimsFromJwtToken(String jwtToken) throws Exception{
+    public Map<String, Claim> getClaimsFromJwtToken(String jwtToken) throws Exception{
 
         String tokenSecret = env.getProperty("jwt.secret.key");
 
@@ -63,8 +65,8 @@ public class TokenService {
             JWTVerifier jwtVerifier = JWT.require(algorithm).build();
 
             DecodedJWT decodedJWT = jwtVerifier.verify(jwtToken);
-            String jwtPayload = decodedJWT.getPayload();
-            return new JSONObject(jwtPayload);
+            Map<String, Claim> jwtPayload = decodedJWT.getClaims();
+            return jwtPayload;
 
             //return decodedJWT.getClaim("userId").toString();
         }
@@ -76,23 +78,15 @@ public class TokenService {
             logger.error("Error while verifying JWT Token :" + jve.getMessage());
             jve.printStackTrace();
             throw jve;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw e;
         }
     }
 
     
     public boolean isTokenValid(String jwtToken) throws Exception {
         try {
-            JSONObject claimsFromJwtToken = this.getClaimsFromJwtToken(jwtToken);
+            Map<String, Claim> claimsFromJwtToken = this.getClaimsFromJwtToken(jwtToken);
 
-            String userId = null;
-            try {
-                userId = claimsFromJwtToken.getString("userId");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            String userId = claimsFromJwtToken.get("userId").asString();
 
             if (userId == null) {
                 return false;
