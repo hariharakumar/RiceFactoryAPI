@@ -4,6 +4,7 @@ import com.projects.ricefactory.dto.User;
 import com.projects.ricefactory.mapper.UserRecordMapper;
 import com.projects.ricefactory.service.UserServiceDao;
 import com.projects.ricefactory.utils.MySqlQueries;
+import com.projects.ricefactory.utils.RfUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -69,7 +70,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
                 ps.setString(3, user.getEmail());
                 ps.setString(4, user.getPhoneNumber1());
                 ps.setString(5, user.getPhoneNumber2());
-                ps.setString(6, user.getPassword());
+                ps.setString(6, RfUtils.hashString(user.getPassword()));
                 ps.setBoolean(7, true);
                 return ps;
             }
@@ -108,7 +109,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
                 ps.setString(3, updatedUser.getEmail());
                 ps.setString(4, updatedUser.getPhoneNumber1());
                 ps.setString(5, updatedUser.getPhoneNumber2());
-                ps.setString(6, updatedUser.getPassword());
+                ps.setString(6, RfUtils.hashString(updatedUser.getPassword()));
                 ps.setBoolean(7, true);
                 ps.setLong(8, updatedUser.getId());
                 return ps;
@@ -173,4 +174,5 @@ public class UserServiceDaoImpl implements UserServiceDao {
 
         return userObject;
     }
+
 }
