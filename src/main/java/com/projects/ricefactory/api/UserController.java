@@ -22,12 +22,10 @@ import java.util.Map;
 @RestController
 public class UserController {
 
+    // TODO : Write Authorization for requests
     // TODO : Write all exception logic.
     // TODO : Write validations for JSON fields
-    // TODO : Write authorization for all requests - DONE
-    // TODO : Hash the password - SHA-256 and save it.
     // TODO : Add user roles , and add rules that says only admin can see certain API's
-    // TODO : Figure out how actuator works
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 

@@ -56,7 +56,7 @@ public class JWTFilter extends GenericFilterBean {
                 filterChain.doFilter(request, response);
             } else {
 
-                // Disabling for temporary purpose
+                // Disabling JWT Filtering temporarily
                 if(Boolean.parseBoolean(env.getProperty("enable.jwt.token")) == false) {
                     filterChain.doFilter(request, response);
                 }
