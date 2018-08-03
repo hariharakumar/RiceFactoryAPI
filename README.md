@@ -1,3 +1,5 @@
+-- Technologies used : Java, Spring boot, REST, JWT, MySQL
+
 -- You can Build the application using command : gradle clean build -x test deployToTomcat
    - To run the application, you can deploy to local tomcat container or use built in spring boot container
 
