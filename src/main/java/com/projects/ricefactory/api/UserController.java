@@ -1,5 +1,7 @@
 package com.projects.ricefactory.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.projects.ricefactory.dto.User;
 import com.projects.ricefactory.service.UserServiceDao;
 import com.projects.ricefactory.service.impl.TokenService;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
@@ -22,12 +25,14 @@ import java.util.Map;
 @RestController
 public class UserController {
 
+
     // TODO : Write Authorization for requests
     // TODO : Write all exception logic.
     // TODO : Write validations for JSON fields
     // TODO : Add user roles , and add rules that says only admin can see certain API's
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final ObjectMapper mapper  = new ObjectMapper();
 
     @Autowired
     private UserServiceDao userServiceDao;
@@ -37,6 +42,17 @@ public class UserController {
 
     @Autowired(required=true)
     private HttpServletRequest request;
+
+    @RequestMapping(
+            value = "/health",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Response getHealth() {
+        ObjectNode statusNode = mapper.createObjectNode();
+        statusNode.put("Status", "Up");
+        return Response.ok(statusNode.toString()).build();
+    }
 
     @RequestMapping(
             value = "/v1/users/{id}",

@@ -40,7 +40,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
             propagation = Propagation.REQUIRED, // Will start new transactions if they don't exist.
             readOnly = false // because this Transaction changes the database.
     )
-    public User createUser(User user) throws Exception{
+    public User createUser(User user) throws Exception {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
