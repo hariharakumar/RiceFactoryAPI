@@ -18,7 +18,7 @@ def tomcatHome = '/Users/hearlapati/Documents/SoftwaresandServers/apache-tomcat-
 
 apply plugin: 'java'
 apply plugin: 'eclipse-wtp'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 apply plugin: 'com.bmuschko.tomcat'
 apply plugin: 'com.bmuschko.tomcat-base'
@@ -75,4 +75,5 @@ dependencies {
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.1.4.Final'
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.2.3.Final'
 	compile group: 'com.auth0', name: 'java-jwt', version: '3.2.0'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.5.RELEASE'
 }

@@ -26,9 +26,10 @@ import java.util.Map;
 public class UserController {
 
 
+    //TODO : Write signature definitions to each method - using /** and then enter
     // TODO : Write Authorization for requests
     // TODO : Write all exception logic.
-    // TODO : Write validations for JSON fields
+    // TODO : Write validations for JSON fields : https://lmonkiewicz.com/programming/get-noticed-2017/spring-boot-rest-request-validation/
     // TODO : Add user roles , and add rules that says only admin can see certain API's
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
